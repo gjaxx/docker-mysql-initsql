@@ -104,6 +104,7 @@ select * from table1;
 ***
 
 但以上方式有个问题，就是如果有多个sql文件，无法保证执行顺序，这就需要引入 sh 文件，思路是在docker-entrypoint-initdb.d 目录下放置 sh 文件，在 sh 文件中依次执行 sql 文件，编写Dockerfile、install_db.sh、init_database.sql、init_table.sql、init_data.sql 文件，内容如下：
+
 ####fileName: Dockerfile
 ```
 #基础镜像使用 mysql:latest
@@ -141,6 +142,7 @@ COPY ./$INSTALL_DB_SHELL $AUTO_RUN_DIR/
 RUN chmod a+x $AUTO_RUN_DIR/$INSTALL_DB_SHELL
 ```
 
+
 ####fileName：install_db.sh
 ```
 mysql -uroot -p$MYSQL_ROOT_PASSWORD << EOF
@@ -148,10 +150,12 @@ source $WORK_PATH/$FILE_0;
 source $WORK_PATH/$FILE_1;
 source $WORK_PATH/$FILE_2; 
 ```
+
 ####fileName：init_database.sql
 ```
 CREATE DATABASE IF NOT EXISTS my_db default charset utf8 COLLATE utf8_general_ci;
 ```
+
 ####fileName：init_table.sql
 ```
 use my_db;
